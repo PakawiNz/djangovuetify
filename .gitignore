@@ -1,0 +1,6 @@
+/.idea/*
+/vue/node_modules/*
+/venv/*
+*.pyc
+*.sqlite
+*.env

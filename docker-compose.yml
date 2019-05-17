@@ -1,0 +1,25 @@
+version: '3'
+
+volumes:
+  postgres_data:
+
+services:
+  db:
+    image: postgres:latest
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+
+  redis:
+    image: redis:latest
+
+  runserver:
+    image: djangovuetify:latest
+    volumes:
+      - ./:/app/
+    ports:
+      - "0.0.0.0:8000:8000"
+    command: "python3 manage.py runserver 0:8000"
+    depends_on:
+      - db
+      - redis
+
