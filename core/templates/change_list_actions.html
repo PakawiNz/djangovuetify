@@ -1,0 +1,11 @@
+{% extends "admin/change_list.html" %}
+{% load i18n admin_static %}
+
+{% block object-tools-items %}
+{% for button in cl.model_admin.get_change_list_buttons %}
+<li>
+    <a href="{{button.link}}" class="btn btn-high btn-success">{{ button.name }}</a>
+</li>
+{% endfor %}
+{{ block.super }}
+{% endblock %}
