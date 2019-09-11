@@ -11,4 +11,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include((api_urlpatterns, 'api'))),
     re_path('(?:admin|api|static|media)/.*', not_found),
+    re_path('.*', vue),
 ]

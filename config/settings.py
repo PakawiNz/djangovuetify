@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
-import os
+import socket
 
 import environ
 
@@ -18,13 +18,19 @@ root = environ.Path(__file__) - 2
 env = environ.Env()
 env.read_env(root('.env'))
 
-BASE_DIR = str(root)
+BASE_DIR = root()
 
 SECRET_KEY = env('SECRET_KEY')
 
 DEBUG = env('DEBUG', default=False)
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1'] if DEBUG else env('ALLOWED_HOST')
+if DEBUG:
+    ALLOWED_HOSTS = [
+        'localhost', '127.0.0.1',
+        socket.gethostbyname(socket.gethostname()),
+    ]
+else:
+    ALLOWED_HOSTS = env('ALLOWED_HOST')
 
 # Application definition
 
@@ -60,7 +66,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['templates'],
+        'DIRS': ['templates', root('vue', 'dist')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -83,8 +89,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'postgres',
         'USER': 'postgres',
-        'HOST': 'db', # set in docker-compose.yml
-        'PORT': 5432 # default postgres port
+        'HOST': 'db',  # set in docker-compose.yml
+        'PORT': 5432  # default postgres port
     }
 }
 
@@ -124,10 +130,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = 'static/'
+STATIC_ROOT = root('static')
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'vue', 'dist'),
+    root('vue', 'dist'),
 ]
 
 # ================================================== CUSTOM
