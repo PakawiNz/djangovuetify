@@ -1,6 +1,7 @@
-/.idea/*
-/vue/node_modules/*
-/venv/*
+.idea
+node_modules
+venv
+static
 *.pyc
 *.sqlite
 *.env

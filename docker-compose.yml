@@ -12,14 +12,21 @@ services:
   redis:
     image: redis:latest
 
-  runserver:
+  uwsgi:
     image: djangovuetify:latest
-    volumes:
-      - ./:/app/
-    ports:
-      - "0.0.0.0:8000:8000"
-    command: "python3 manage.py runserver 0:8000"
     depends_on:
       - db
       - redis
+    volumes:
+      - ./:/app/
+    command: uwsgi --ini /app/compose/uwsgi.ini
 
+  nginx:
+    image: nginx:1.13
+    depends_on:
+      - uwsgi
+    volumes:
+      - ./compose/nginx.conf:/etc/nginx/nginx.conf
+      - ./:/app/
+    ports:
+      - "0.0.0.0:8000:8000"
