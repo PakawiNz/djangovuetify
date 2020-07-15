@@ -19,7 +19,7 @@ function route(path, view, name) {
   return {
     name: name || view,
     path,
-    component: resovle => import(`@/views/${view}.vue`).then(resovle),
+    component: resolve => import(`@/views/${view}.vue`).then(resolve),
   }
 }
 
