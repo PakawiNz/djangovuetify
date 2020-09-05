@@ -3,10 +3,11 @@
 import Vue from 'vue'
 
 // Components
-import './components'
+import '@/components'
 
 // Plugins
-import './plugins'
+import '@/plugins'
+import vuetify from '@/plugins/vuetify'
 
 // Sync router with store
 import { sync } from 'vuex-router-sync'
@@ -27,5 +28,6 @@ new Vue({
   i18n,
   router,
   store,
+  vuetify,
   render: h => h(App),
 }).$mount('#app')

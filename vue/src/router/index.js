@@ -28,9 +28,7 @@ Vue.use(Router)
 // Create a new router
 const router = new Router({
   mode: 'history',
-  routes: paths
-    .map(path => route(path.path, path.view, path.name))
-    .concat([{ path: '*', redirect: '/' }]),
+  routes: paths.map(path => route(path.path, path.view, path.name)),
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {
       return savedPosition
