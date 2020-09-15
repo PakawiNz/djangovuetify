@@ -3,6 +3,6 @@ node_modules
 venv
 static
 *.pyc
-*.sqlite
+*.sqlite*
 *.env
 !example.env

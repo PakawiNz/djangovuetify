@@ -3,19 +3,16 @@ from django.contrib.admin.sites import AdminSite
 from django.db.models.base import ModelBase
 
 
-class CoreAdminSite(AdminSite):
+class CommonAdminSite(AdminSite):
     model_sequences = {}
 
     def register(self, model_or_iterable, admin_class=None, **options):
         if isinstance(model_or_iterable, ModelBase):
             model_or_iterable = [model_or_iterable]
 
-        if options.get('list_display') == '__all__':
-            model = model_or_iterable[0]
-
+        if admin_class and admin_class.list_display == '__all__' or options.get('list_display') == '__all__':
             options['list_display'] = [
-                field.name
-                for field in model._meta.concrete_fields
+                field.name for field in model_or_iterable[0]._meta.concrete_fields
             ]
 
         super().register(model_or_iterable, admin_class, **options)
@@ -39,5 +36,5 @@ class CoreAdminSite(AdminSite):
         return app_dict
 
 
-class CoreAdminConfig(AdminConfig):
-    default_site = 'core.admin_site.CoreAdminSite'
+class CommonAdminConfig(AdminConfig):
+    default_site = 'utils.admin_utils.CommonAdminSite'

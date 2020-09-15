@@ -2,10 +2,10 @@ module.exports = {
   publicPath: process.env.NODE_ENV === 'production' ? '/static/' : '/',
   devServer: {
     disableHostCheck: true,
-    port: 8000,
+    port: 8001,
     proxy: {
       '^/(api|admin|static|media|ws)': {
-        target: 'http://localhost:8088',
+        target: 'http://localhost:8000',
       },
     },
   },
