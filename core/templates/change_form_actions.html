@@ -1,0 +1,15 @@
+{% extends "admin/change_form.html" %}
+{% load i18n admin_urls static admin_modify %}
+
+{% block object-tools-items %}
+<form id="buttons_form" action="{{ adminform.model_admin.base_url }}{{ object_id }}/action/" method="POST">
+<input id="buttons_form_action" type="hidden" name="action" value="">
+{% csrf_token %}
+{% for button in adminform.model_admin.form_actions_buttons %}
+<li>
+    <a href="javascript:{}" onclick="document.getElementById('buttons_form_action').value = '{{ button.action }}'; document.getElementById('buttons_form').submit();">{{ button.name }}</a>
+</li>
+{% endfor %}
+{{ block.super }}
+</form>
+{% endblock %}

@@ -16,6 +16,6 @@ RUN echo "Asia/Bangkok" > /etc/timezone && \
 
 # Upgrade PIP to latest version
 RUN pip3 install --upgrade pip
-RUN pip3 install -r /requirements/base.txt
+RUN pip3 install -r /requirements/production.txt
 
 WORKDIR /app

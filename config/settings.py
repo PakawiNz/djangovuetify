@@ -30,7 +30,7 @@ PLATFORM_APPS = [
     'django_extensions',
     'rest_framework',
     'channels',
-    'utils.admin_utils.CommonAdminConfig',
+    'config.admin.CommonAdminConfig',
     'core.apps.CoreConfig',
 ]
 
@@ -109,7 +109,7 @@ USE_TZ = True
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['templates', root('vue', 'dist')],
+        'DIRS': ['templates', root('static'), root('vue', 'dist')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -128,13 +128,12 @@ STATIC_URL = '/static/'
 
 STATIC_ROOT = root('static')
 
-STATICFILES_DIRS = [
-    root('vue', 'dist'),
-]
+STATICFILES_DIRS = [root('vue', 'dist')]
 
 # ================================================== STORAGE
 
-STORAGE_ROOT = root('storage')
+STORAGE_ROOT = env('STORAGE_ROOT', default=root('storage'))
+LOGS_ROOT = env('LOGS_ROOT', default=root('logs'))
 
 # ================================================== CELERY
 

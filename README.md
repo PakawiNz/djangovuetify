@@ -5,7 +5,7 @@ basic configuration (boilerplate) for django and vuetify to work together
   * create **".env"** from **"example.env"** and specify replace value
 
 * Windows Installation.
-  * pip install -r requirements/base.txt
+  * pip install -r requirements/production.txt
   * cd vue
   * npm install
 

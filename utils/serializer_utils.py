@@ -1,7 +1,8 @@
+from django.db import transaction
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from utils.model_utils import StatefulModel
+from utils.model_utils import StatefulModel, DirectlySaveException
 
 
 class ActionField(serializers.Field):
@@ -72,7 +73,7 @@ class CommonModelSerializer(serializers.ModelSerializer):
         return self.context['request'].user
 
 
-class StatefulSerializer(serializers.ModelSerializer):
+class StatefulSerializer(CommonModelSerializer):
     action = ActionField()
     status = serializers.CharField(source='status.name', read_only=True)
     allowed_actions = AllowedActionsField()
@@ -90,6 +91,26 @@ class StatefulSerializer(serializers.ModelSerializer):
             return validate_method(self, value, self.context['action'])
 
         return inner_validate_method
+
+    def _save_instance(self, validated_data, instance=None):
+        if instance is None:
+            instance = self.Meta.model()
+        try:
+            # to help setting each fields into instance / error should be raise
+            serializers.ModelSerializer.update(self, instance, validated_data)
+        except DirectlySaveException:
+            instance.transition(self.user, **validated_data)
+        else:
+            raise Exception('NOT SAVED')
+        return instance
+
+    @transaction.atomic
+    def create(self, validated_data):
+        return self._save_instance(validated_data)
+
+    @transaction.atomic
+    def update(self, instance, validated_data):
+        return self._save_instance(validated_data, instance)
 
     class Meta:
         abstract = True

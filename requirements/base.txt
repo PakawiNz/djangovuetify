@@ -1,9 +1,9 @@
 channels
 channels-redis
-daphne
 Django
 django-environ
 django-extensions
 djangorestframework
 psycopg2-binary
-uWSGI
+celery[redis]
+Pillow

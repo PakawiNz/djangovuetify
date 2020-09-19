@@ -1,0 +1,108 @@
+<html>
+<head>
+    <title>Stateful Model: {{ model_label }}</title>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/vis/4.7.0/vis.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.7.0/vis.min.css" rel="stylesheet" type="text/css" />
+    <style>
+       body {
+      font: 10pt sans;
+    }
+    #mynetwork {
+      float:left;
+      width: 600px;
+      height: 600px;
+      margin:5px;
+      border: 1px solid lightgray;
+    }
+    #config {
+      float:left;
+      width: 400px;
+      height: 600px;
+    }
+    </style>
+</head>
+<body>
+    <div id="header">
+        <strong>{{ model_label }}</strong>
+        <input type="checkbox" id="chkConfig" /><label for="chkConfig">Config Graph</label>
+    </div>
+    <div id="mynetwork"></div>
+    <div id="config" style="display: none"></div>
+
+    <p id="selection"></p>
+
+    <script language="javascript">
+        // create an array with nodes
+        var nodes = new vis.DataSet(
+        {{ nodes|safe }}
+        );
+
+        // create an array with edges
+        var edges = new vis.DataSet(
+        {{ edges|safe }}
+        );
+        var data = {
+            nodes: nodes,
+            edges: edges
+        }
+
+        // create a network
+        var container = document.getElementById('mynetwork');
+
+        var options = {
+        physics: {
+          stabilization: false,
+          barnesHut: {
+              springLength: 255
+          }
+        },
+        configure: {
+          filter:function (option, path) {
+            if (path.indexOf('physics') !== -1) {
+              return true;
+            }
+            if (path.indexOf('smooth') !== -1 || option === 'smooth') {
+              return true;
+            }
+            return false;
+          },
+          container: document.getElementById('config')
+        }
+        };
+        var network = new vis.Network(container, data, options);
+        var chkConfig = document.getElementById('chkConfig');
+        chkConfig.onchange = function() {
+            if(chkConfig.checked) {
+                config.style.display = ''
+            } else {
+                config.style.display = 'none'
+            }
+        };
+    </script>
+    <table border="1px" cellpadding="5" style="border-collapse: collapse;">
+        <tr>
+            <th rowspan="2">Current Status</th>
+            <th colspan="{{ states|length }}">Next Status allowed</th>
+        </tr>
+        <tr>
+            {% for state in states %}
+            <th>
+                {{ state.label|default:"NONE"}}
+            </th>
+            {% endfor %}
+        </tr>
+        {% for state in states %}
+            <tr>
+                <th>{{ state.label|default:"NONE"}}</th>
+                {% for to_state in state.action_list %}
+                    <td>
+                    {{ to_state|join:"<br />" }}
+                    </td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
+
+

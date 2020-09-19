@@ -1,9 +1,13 @@
+import base64
 import datetime
 import os
 import pathlib
 import shutil
+import uuid
 from functools import wraps
 from uuid import uuid4
+
+from django.conf import settings
 
 
 def get_path(root_path, *sub_folders, file=None):
@@ -55,3 +59,19 @@ class open_temp_directory:
                 return func(*args, **kwargs)
 
         return inner
+
+
+def file_to_base64(filename):
+    with open(filename, "rb") as file:
+        return base64.b64encode(file.read()).decode('utf-8')
+
+
+def random_file_name():
+    return base64.b32encode(uuid.uuid4().bytes).decode().strip('=')
+
+
+def save_uploaded_file(uploaded_file, *sub_folders, filename):
+    path = get_path(settings.STORAGE_ROOT, *sub_folders, file=filename + os.path.splitext(uploaded_file.name)[1])
+    with open(path, 'wb') as file:
+        file.write(uploaded_file.read())
+    return os.path.relpath(path, settings.STORAGE_ROOT)
