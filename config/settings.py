@@ -31,6 +31,7 @@ PLATFORM_APPS = [
     'rest_framework',
     'channels',
     'config.admin.CommonAdminConfig',
+    'config.celery.CeleryConfig',
     'core.apps.CoreConfig',
 ]
 
